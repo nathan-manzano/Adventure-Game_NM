@@ -4,7 +4,6 @@ import random
 health = 25
 
 def showInstructions():
-
     #main menu
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Welcome to Mansion Maze")
@@ -17,23 +16,18 @@ def showInstructions():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Objective:" "FIND THE EXIT")
 
-
 def showStatus():
-
-    #print status
+    #show player status
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("You are at the " + rooms[currentRoom]["name"])
     print("Health:", health)
-
-    #inventory
+    #show inventory
     print("Inventory : " + str(inventory))
-
-    #print item
+    #show items in the room
     if "item" in rooms[currentRoom]:
         print("You see a " + rooms[currentRoom]["item"]  +" in the room.")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-    #if enemy in the room
+    #show enemies in the room
     if "enemy" in rooms[currentRoom]:
         print("Enemy Spotted: " + rooms[currentRoom]["enemy"])
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -141,27 +135,21 @@ showInstructions()
 #start game
 while True:
     showStatus()
-
     #get input
     move = input(">").lower().split()
-
     #if get command
     if move[0] == "go":
-
-        #if there is an enemy
+        #if there is an enemy in the room
         if "enemy" in rooms[currentRoom]:
             print("Can't escape! You must fight!")
-
         else:
             #if there is a door
             if move[1] in rooms[currentRoom]:
                 #new room
                 currentRoom = rooms[currentRoom][move[1]]
-
             #if there is no door
             else:
                 print("That is a wall.")
-
     #if get command
     if move[0] == "get":
         #if item
@@ -171,7 +159,6 @@ while True:
             print(move[1] + " retrieved!")
             #remove item from room
             del rooms[currentRoom]["item"]
-
         #if no item
         else:
             print("Can't get " +move[1]  + "!")
