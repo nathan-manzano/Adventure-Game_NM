@@ -1,3 +1,4 @@
+
 import random
 
 #variables
@@ -18,6 +19,7 @@ def showInstructions():
     print("'equip [item in inventory]'")
     print("'drop [item]'")
     print("'fight [enemy name]'")
+    print("YOU CANNOT FIGHT WITHOUT A EQUIPPED WEAPON")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Objective:" " FIND THE EXIT")
 
