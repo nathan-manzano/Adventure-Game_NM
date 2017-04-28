@@ -248,28 +248,43 @@ while True:
             if len(inventory) > 0:
                 if move[1] == "sword":
                     weaponDamage = 10
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'sword' equipped!")
                 elif move[1] == "pillow":
                     weaponDamage = 1
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'pillow' equipped!")
                 elif move[1] == "towel":
                     weaponDamage = 2
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'towel' equipped!")
                 elif move[1] == "cue":
                     weaponDamage = 6
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'cue' equipped!")
                 elif move[1] == "trumpet":
                     weaponDamage = 2
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'trumpet' equipped!")
                 elif move[1] == "mop":
                     weaponDamage = 3
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'mop' equipped!")
                 elif move[1] == "pencil":
                     weaponDamage = 3
+                    equipped.clear()
                     equipped += [move[1]]
                     print("'pencil' equipped!")
                 elif move[1] == "hatchet":
                     weaponDamage = 8
+                    equipped.clear()
+                    equipped += [move[1]]
                     print("'hatchet' equipped!")
             else:
                 weaponDamage = 0
