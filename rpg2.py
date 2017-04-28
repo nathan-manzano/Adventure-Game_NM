@@ -2,6 +2,8 @@ import random
 
 #variables
 health = 25
+enemyHealth = 10
+weaponDamage = 0
 
 def showInstructions():
 
@@ -13,6 +15,7 @@ def showInstructions():
     print("Instructions:")
     print("'go [direction]'" " USE CARDINAL DIRECTIONS")
     print("'get [item]'")
+    print("'equip [item in inventory]'")
     print("'drop [item]'")
     print("'fight [enemy name]'")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -26,6 +29,8 @@ def showStatus():
     print("Health:", health)
     #inventory
     print("Inventory : " + str(inventory))
+    if len(equipped) > 0:
+        print("Equipped: " + str(equipped), "Damage: ", weaponDamage)
     if len(inventory) >= 2:
         print("Your inventory is currently full!")
     #print item
@@ -38,10 +43,12 @@ def showStatus():
     #if enemy in the room
     if "enemy" in rooms[currentRoom]:
         print("Enemy Spotted: " + rooms[currentRoom]["enemy"])
+        print("Enemy health: ", enemyHealth)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 #inventory
 inventory = []
+equipped = []
 
 #locations
 rooms = {
@@ -50,13 +57,13 @@ rooms = {
                   "south" : 3,
                   "north" : 5,
                   "west" : 12,
-                  "item" : "sword"} ,
+                  "item" : "pencil"} ,
 
             2 : {"name" : "Bedroom" ,
                  "west" : 1,
                  "south" : 4 ,
-                 "item" : "pillow",
-                 "enemy": "ghost"} ,
+                 "enemy": "ghost",
+                 "item" : "pillow" } ,
 
             3 : {"name" : "Great Hall" ,
                  "north" : 1 ,
@@ -107,7 +114,7 @@ rooms = {
                   "east" : 3,
                   "north" : 12,
                   "south" : 16,
-                  "item" : "pencil"} ,
+                  "item" : "sword"} ,
 
             12 : {"name" : "Ballroom" ,
                   "east" : 1,
@@ -118,6 +125,7 @@ rooms = {
             13 : {"name" : "Lounge" ,
                   "east" : 5,
                   "south" : 12,
+                  "item" : "hatchet",
                   "enemy": "skeleton"} ,
 
             14 : {"name" : "Observatory" ,
@@ -141,108 +149,143 @@ showInstructions()
 
 #start game
 while True:
-    showStatus()
+    #if enter is pressed don't end the program
+    try:
 
-    if input == "":
-        print("Oops")
-        move = {"do","nothing"}
-    else:
+        showStatus()
+
         #get input
         move = input(">").lower().split()
 
-    #if go command
-    if move[0] == "go":
-        #if there is an enemy
-        if "enemy" in rooms[currentRoom]:
-            print("Can't escape! You must fight!")
-        else:
-            #if there is a door
-            if move[1] in rooms[currentRoom]:
-                #new room
-                currentRoom = rooms[currentRoom][move[1]]
-            #if there is no door
+        #if go command
+        if move[0] == "go":
+            #if there is an enemy
+            if "enemy" in rooms[currentRoom]:
+                print("Can't escape! You must fight!")
             else:
-                print("That is a wall or you mistyped your direction.")
+                #if there is a door
+                if move[1] in rooms[currentRoom]:
+                    #new room
+                    currentRoom = rooms[currentRoom][move[1]]
+                #if there is no door
+                else:
+                    print("That is a wall or you mistyped your direction.")
 
-    #if get command
-    if move[0] == "get":
-        #if item
-        if "item" in rooms[currentRoom] and move[1] in rooms[currentRoom]["item"]:
-            #if inventory if full don't add item
-            if len(inventory) >= 2:
-                print("Your inventory is full!")
-            #add item
+        #if get command
+        if move[0] == "get":
+            #if item
+            if "item" in rooms[currentRoom] and move[1] in rooms[currentRoom]["item"]:
+                #if inventory if full don't add item
+                if len(inventory) >= 2:
+                    print("Your inventory is full!")
+                #add item
+                else:
+                    inventory += [move[1]]
+                    print(move[1] + " retrieved!")
+                    #remove item from room
+                    del rooms[currentRoom]["item"]
+            #if no item
             else:
-                inventory += [move[1]]
-                print(move[1] + " retrieved!")
-                #remove item from room
-                del rooms[currentRoom]["item"]
-        #if no item
-        else:
-            print("Can't get " +move[1]  + "!")
+                print("Can't get " +move[1]  + "!")
 
-    #if fight command
-    if move[0] == "fight":
-        #if there is an enemy
-        if "enemy" in rooms[currentRoom] and move[1] in rooms[currentRoom]["enemy"]:
-            #if you have the equipment to fight
-            if "sword" in inventory or "pencil" in inventory or "cue" in inventory or "chain" in inventory:
-                enemyAttack = random.randrange(10)
-                if enemyAttack >= 5:
-                    health -= enemyAttack
-                    if health <= 0:
+        #if fight command
+        if move[0] == "fight":
+            #if there is an enemy
+            if "enemy" in rooms[currentRoom] and move[1] in rooms[currentRoom]["enemy"]:
+                #if you have the equipment to fight
+                if "sword" in equipped or "pencil" in equipped or "cue" in equipped or "chain" in equipped or "hatchet" in equipped:
+                    enemyAttack = random.randrange(10)
+                    enemyHealth -= weaponDamage
+                    if enemyHealth <= 0:
+                        del rooms[currentRoom]["enemy"]
+                        print("You have slain the enemy!")
+                        enemyHealth = 10
+                    elif health <= 0:
                         print("YOU HAVE DIED")
                         break
                     else:
+                        health -= enemyAttack
                         print("You have been damaged but so has your enemy!")
                 else:
-                    del rooms[currentRoom]["enemy"]
-                    print("You have slain the enemy!")
-                    health += 3
-                    print("You healed a small amount!")
+                    print("YOU DIED DUE TO BEING UNARMED!")
+                    break
             else:
-                print("YOU DIED DUE TO BEING UNARMED!")
-                break
-        else:
-            print("No enemies here!")
+                print("No enemies here!")
 
-    #if drop command
-    if move[0] == "drop":
-        if len(inventory) > 0:
-            if move[1] == "sword":
-                inventory.remove("sword")
-                print("'sword' dropped!")
-            elif move[1] == "pillow":
-                inventory.remove("pillow")
-                print("'pillow' dropped!")
-            elif move[1] == "towel":
-                inventory.remove("towel")
-                print("'towel' dropped!")
-            elif move[1] == "cue":
-                inventory.remove("cue")
-                print("'cue' dropped!")
-            elif move[1] == "trumpet":
-                inventory.remove("trumpet")
-                print("'trumpet' dropped!")
-            elif move[1] == "mop":
-                inventory.remove("mop")
-                print("'mop' dropped!")
-            elif move[1] == "pencil":
-                inventory.remove("pencil")
-                print("'pencil' dropped!")
+        #if drop command
+        if move[0] == "drop":
+            if len(inventory) > 0:
+                if move[1] == "sword":
+                    inventory.remove("sword")
+                    print("'sword' dropped!")
+                elif move[1] == "pillow":
+                    inventory.remove("pillow")
+                    print("'pillow' dropped!")
+                elif move[1] == "towel":
+                    inventory.remove("towel")
+                    print("'towel' dropped!")
+                elif move[1] == "cue":
+                    inventory.remove("cue")
+                    print("'cue' dropped!")
+                elif move[1] == "trumpet":
+                    inventory.remove("trumpet")
+                    print("'trumpet' dropped!")
+                elif move[1] == "mop":
+                    inventory.remove("mop")
+                    print("'mop' dropped!")
+                elif move[1] == "pencil":
+                    inventory.remove("pencil")
+                    print("'pencil' dropped!")
+                elif move[1] == "hatchet":
+                    inventory.remove("hatchet")
+                else:
+                    print("Invalid object!")
             else:
-                print("Invalid object!")
-        else:
-            "Nothing to drop."
+                "Nothing to drop."
 
-    #Death room
-    if rooms[currentRoom] == rooms[16]:
-        print("You found the trap room.")
-        print("YOU HAVE DIED")
-        break
+        #equip item
+        if move[0] == "equip":
+            if len(inventory) > 0:
+                if move[1] == "sword":
+                    weaponDamage = 10
+                    print("'sword' equipped!")
+                elif move[1] == "pillow":
+                    weaponDamage = 1
+                    print("'pillow' equipped!")
+                elif move[1] == "towel":
+                    weaponDamage = 2
+                    print("'towel' equipped!")
+                elif move[1] == "cue":
+                    weaponDamage = 6
+                    print("'cue' equipped!")
+                elif move[1] == "trumpet":
+                    weaponDamage = 2
+                    print("'trumpet' equipped!")
+                elif move[1] == "mop":
+                    weaponDamage = 3
+                    print("'mop' equipped!")
+                elif move[1] == "pencil":
+                    weaponDamage = 3
+                    equipped += [move[1]]
+                    print("'pencil' equipped!")
+                elif move[1] == "hatchet":
+                    weaponDamage = 8
+                    print("'hatchet' equipped!")
+            else:
+                weaponDamage = 0
+                print("Nothing to equip!")
 
-     #Winning room
-    if "book" in inventory:
-        print("You found the secret passage!")
-        print("YOU WIN")
-        break
+        #Death room
+        if rooms[currentRoom] == rooms[16]:
+            print("You found the trap room.")
+            print("YOU HAVE DIED")
+            break
+
+         #Winning room
+        if "book" in inventory:
+            print("You found the secret passage!")
+            print("YOU WIN")
+            break
+
+    except:
+        pass
