@@ -71,19 +71,13 @@ rooms = {
                   "south" : 3,
                   "north" : 5,
                   "west" : 12,
-                  "item" : {"name" : "sword",
-                            "damage" : 7,
-                            "lore" : "It's longer than a knife at least."}
-                            } ,
+                  "item" : "sword"} ,
 
             2 : {"name" : "Bedroom" ,
                  "west" : 1,
                  "south" : 4 ,
                  "enemy": "ghost",
-                 "item" : { "name" : "pillow",
-                            "damage" : 1,
-                            "lore" : "A pillow."}
-                          } ,
+                 "item" : "pillow"} ,
 
             3 : {"name" : "Great Hall" ,
                  "north" : 1 ,
