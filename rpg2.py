@@ -1,7 +1,7 @@
 import random
 
 #variables
-health = 25
+health = 30
 enemyHealth = 10
 weaponDamage = 0
 
@@ -10,7 +10,6 @@ def showInstructions():
     #main menu
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Welcome to Mansion Maze")
-    print("Made by: Nathan Manzano")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Instructions:")
     print("'go [direction]'" " USE CARDINAL DIRECTIONS")
@@ -18,6 +17,7 @@ def showInstructions():
     print("'equip [item in inventory]'")
     print("'drop [item]'")
     print("'fight [enemy name]'")
+    print("YOU CANNOT FIGHT WITHOUT A EQUIPPED WEAPON AND YOU CANNOT RECOVER DROPPED ITEMS")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("Objective:" " FIND THE EXIT")
 
@@ -193,7 +193,7 @@ while True:
             #if there is an enemy
             if "enemy" in rooms[currentRoom] and move[1] in rooms[currentRoom]["enemy"]:
                 #if you have the equipment to fight
-                if "sword" in equipped or "pencil" in equipped or "cue" in equipped or "chain" in equipped or "hatchet" in equipped:
+                if len(equipped) > 0:
                     enemyAttack = random.randrange(10)
                     enemyHealth -= weaponDamage
                     if enemyHealth <= 0:
@@ -217,27 +217,36 @@ while True:
             if len(inventory) > 0:
                 if move[1] == "sword":
                     inventory.remove("sword")
+                    equipped.remove("sword")
                     print("'sword' dropped!")
                 elif move[1] == "pillow":
                     inventory.remove("pillow")
+                    equipped.remove("pillow")
                     print("'pillow' dropped!")
                 elif move[1] == "towel":
                     inventory.remove("towel")
+                    equipped.remove("towel")
                     print("'towel' dropped!")
                 elif move[1] == "cue":
                     inventory.remove("cue")
+                    equipped.remove("cue")
                     print("'cue' dropped!")
                 elif move[1] == "trumpet":
                     inventory.remove("trumpet")
+                    equipped.remove("trumpet")
                     print("'trumpet' dropped!")
                 elif move[1] == "mop":
                     inventory.remove("mop")
+                    equipped.remove("mop")
                     print("'mop' dropped!")
                 elif move[1] == "pencil":
                     inventory.remove("pencil")
+                    equipped.remove("pencil")
                     print("'pencil' dropped!")
                 elif move[1] == "hatchet":
                     inventory.remove("hatchet")
+                    equipped.remove("hatchet")
+                    print("'hatchet' dropped!")
                 else:
                     print("Invalid object!")
             else:
